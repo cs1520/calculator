@@ -15,18 +15,29 @@ def root():
     return render_template('index.html')
 
 
+@app.route('/syllabus')
+def syllabus():
+    """Generate a page that contains the course syllabus
+
+    Just like the root() function, but it's annotated with a different route
+    """
+    return render_template('syllabus.html')
+
+
 @app.route('/lecture')
 def handle_lecture():
     """Generate a page with a list of lectures
 
-    The list of lectures is a Python list of links
+    In this iteration, the data is read from a hardcoded list in Python.
     """
-    lectures = [{"date": "Jan 9, 2020", "topic": "HTTP and the Internet"}, {"date": "Jan 16, 2020", "topic": "Python and Javascript"}]
+    lectures = [
+        {"date": "Jan 9, 2020", "title": "HTTP and the Internet", "url": "https://docs.google.com/presentation/d/1Z1TwlIKHDGxMHPhRX1IH0wz6MbfbKGcMvrhAYS2MQLM/edit?usp=sharing"}, 
+        {"date": "Jan 9, 2020", "title": "Handling Requests", "url": "https://docs.google.com/presentation/d/1Z1TwlIKHDGxMHPhRX1IH0wz6MbfbKGcMvrhAYS2MQLM/edit?usp=sharing"}, 
+        {"date": "Jan 16, 2020", "title": "Intro to Python", "url": "https://docs.google.com/presentation/d/1yrfJdNNvAwKVsGGPGgyGHd-uWT0j3iZNw_PovI8rDIE/edit?usp=sharing"},
+        # Each dictionary in this list has three keys, "date", "title", and "url"
+        # Because we need all of these keys to render the page, and we will always have them, this could also be a good time to use a define a Python class for "Lecture".
+        {"date": "Jan 16, 2020", "title": "Intro to Javascript", "url": "https://docs.google.com/presentation/d/1HUjfcA_fhwb8K5nUSxZGXrtBgGAo2pxkdK68PYz_FqQ/edit?usp=sharing"}]
     return render_template('lectures.html', lectures=lectures)
-
-@app.route('/syllabus')
-def users(user=None):
-    return render_template('index.html')
 
 
 if __name__ == '__main__':

@@ -6,3 +6,8 @@
 
 <h1>Lectures</h1>
 <!-- These are the links to the Google Slides from our lectures -->
+<ul>
+  {% for lecture in lectures %}
+    <li>{{ lecture.date }} - <a href="{{ lecture.url }}">{{ lecture.title }}</a></li>
+  {% endfor %}
+</ul>
