@@ -40,5 +40,11 @@ def handle_lecture():
     return render_template('lectures.html', lectures=lectures)
 
 
+@app.route('/about')
+def handle_about():
+    """Generate a page with a description of the inner workings!"""
+    return render_template('about.html')
+
+
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080, debug=True)
