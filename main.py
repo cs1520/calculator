@@ -1,9 +1,12 @@
 from flask import Flask, render_template
 from random import randint
+from storage import create_storage_client, list_slides
 
 
 app = Flask(__name__)
 
+# Initialization code
+client = create_storage_client()
 
 @app.route('/')
 def root():
@@ -34,6 +37,8 @@ def handle_lecture():
 
     In this iteration, the data is read from a hardcoded list in Python.
     """
+    lectures = list_slides(client)
+    """
     lectures = [
         {"date": "Jan 9, 2020", "title": "HTTP and the Internet", "url": "https://docs.google.com/presentation/d/1Z1TwlIKHDGxMHPhRX1IH0wz6MbfbKGcMvrhAYS2MQLM/edit?usp=sharing"}, 
         {"date": "Jan 9, 2020", "title": "Handling Requests", "url": "https://docs.google.com/presentation/d/1Z1TwlIKHDGxMHPhRX1IH0wz6MbfbKGcMvrhAYS2MQLM/edit?usp=sharing"}, 
@@ -41,6 +46,8 @@ def handle_lecture():
         # Each dictionary in this list has three keys, "date", "title", and "url"
         # Because we need all of these keys to render the page, and we will always have them, this could also be a good time to use a define a Python class for "Lecture".
         {"date": "Jan 16, 2020", "title": "Intro to Javascript", "url": "https://docs.google.com/presentation/d/1HUjfcA_fhwb8K5nUSxZGXrtBgGAo2pxkdK68PYz_FqQ/edit?usp=sharing"}]
+    """
+
     return render_template('lectures.html', lectures=lectures)
 
 
