@@ -12,7 +12,8 @@ def root():
     The render_template function reads an HTML file from the "templates" directory
     and fills in any variables 
     """
-    return render_template('index.html')
+    fun_number = randint(45, 121)
+    return render_template('index.html', num=fun_number)
 
 
 @app.route('/syllabus')
