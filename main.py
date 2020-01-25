@@ -9,8 +9,11 @@ app = Flask(__name__)
 def root():
     """Generate the homepage
 
-    The render_template function reads an HTML file from the "templates" directory
-    and fills in any variables 
+    Gets a random number from the randint function, passing it to the
+    template.
+
+    The render_template function reads an HTML file from the "templates"
+    directory and fills in any variables.
     """
     fun_number = randint(45, 121)
     return render_template('index.html', num=fun_number)
@@ -20,7 +23,7 @@ def root():
 def syllabus():
     """Generate a page that contains the course syllabus
 
-    Just like the root() function, but it's annotated with a different route
+    Just like the root() function, but it's annotated with a different route.
     """
     return render_template('syllabus.html')
 
@@ -43,7 +46,10 @@ def handle_lecture():
 
 @app.route('/about')
 def handle_about():
-    """Generate a page with a description of the inner workings!"""
+    """Generate a page with a description of how this website works.
+
+    Includes a link to this website's GitHub page.
+    """
     return render_template('about.html')
 
 
