@@ -1,13 +1,15 @@
-from google.cloud import storage
+from google.cloud import storage, datastore
 
 def create_storage_client():
     return storage.Client()
 
-def create_view(blob):
+def get_metadata(blob):
     return {"date": blob.updated, "title": blob.id, "url": blob.public_url}
 
-def list_slides(client):
-    bucket = client.get_bucket("jake1520-slides")
-    blobs = client.list_blobs(bucket)
+def list_slides(storage_client):
+    """ Reads all of the slides from the storage client
+    """
+    bucket = storage_client.get_bucket("jake1520-slides")
+    blobs = storage_client.list_blobs(bucket)
     
-    return [create_view(blob) for blob in blobs]
+    return [get_metadata(blob) for blob in blobs]

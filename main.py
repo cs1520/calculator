@@ -6,7 +6,7 @@ from storage import create_storage_client, list_slides
 app = Flask(__name__)
 
 # Initialization code
-client = create_storage_client()
+storage_client = create_storage_client()
 
 @app.route('/')
 def root():
@@ -37,7 +37,7 @@ def handle_lecture():
 
     In this iteration, the data is read from a hardcoded list in Python.
     """
-    lectures = list_slides(client)
+    lectures = list_slides(storage_client)
     """
     lectures = [
         {"date": "Jan 9, 2020", "title": "HTTP and the Internet", "url": "https://docs.google.com/presentation/d/1Z1TwlIKHDGxMHPhRX1IH0wz6MbfbKGcMvrhAYS2MQLM/edit?usp=sharing"}, 
