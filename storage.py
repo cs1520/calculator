@@ -15,7 +15,11 @@ def create_datastore_client():
 
 def create_view(metadata):
     print(metadata)
-    return {"date": metadata["presented_at"], "title": metadata["title"], "url": metadata["public_url"]}
+    return {
+        "date": metadata["presented_at"],
+        "title": metadata["title"],
+        "url": metadata["public_url"],
+    }
 
 
 def list_slides(datastore_client):
@@ -26,3 +30,14 @@ def list_slides(datastore_client):
 
     slideshows = [create_view(metadata) for metadata in lectures]
     return sorted(slideshows, key=lambda i: i["date"])
+
+
+def store_quiz_answer(datastore_client, user, quiz_id, answers):
+    quiz_key = datastore_client.key("QuizAnswer", str(user + "_quiz" + quiz_id))
+
+    quiz_answer = datastore.Entity(key=quiz_key)
+    for q, a in answers.items():
+        quiz_answer[q] = a
+
+    datastore_client.put(quiz_answer)
+

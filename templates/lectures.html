@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<meta charset="utf-8">
-<!-- This is omitting some of the optional html tags -->
-<!-- https://html.spec.whatwg.org/multipage/syntax.html#optional-tags -->
-<title>CS 1520: Lectures</title>
+{% extends "_base.html" %}
+{% block title %}Lectures{% endblock %}
 
 <a href="/">Back to home</a>
 
+{% block content %}
 <h1>Lectures</h1>
 <!-- These are the links to the Google Slides from our lectures -->
 <ul>
@@ -13,3 +11,4 @@
     <li>{{ lecture.date.strftime("%B %d, %Y") }} - <a href="{{ lecture.url }}">{{ lecture.title }}</a></li>
   {% endfor %}
 </ul>
+{% endblock %}
