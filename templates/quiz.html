@@ -1,0 +1,24 @@
+{% extends "_base.html" %}
+{% block title %}{{ quiz.title }}{% endblock %}
+
+{% block content %}
+<a href="/">Back to home</a>
+
+<h2>{{ quiz.title }}</h2>
+
+<form action="/quiz/{{ quiz.id }}" method="POST" autocomplete="off">
+  <fieldset>
+    <legend>Your Name and Pitt ID:</legend>
+    <p><label>Name</label> <input name="student-name"></p>
+    <p><label>ID</label> <input name="student-id"></p>
+  </fieldset>
+
+  <fieldset>
+    <legend>Please fill out each question, and click "submit" when you are finished</legend>
+    {% for question in quiz.questions %}
+      <p><label>{{ loop.index }}. {{ question.description }}<label> <input name="question-{{ loop.index }}"></p>
+    {% endfor %}
+  </fieldset>
+  <button type="submit">Submit quiz</button>
+</form>
+{% endblock %}

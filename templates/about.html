@@ -1,9 +1,7 @@
-<!DOCTYPE html>
-<meta charset="utf-8">
-<!-- This is omitting some of the optional html tags -->
-<!-- https://html.spec.whatwg.org/multipage/syntax.html#optional-tags -->
-<title>CS 1520: About this site</title>
+{% extends "_base.html" %}
+{% block title %}About this site{% endblock %}
 
+{% block content %}
 <a href="/">Back to home</a>
 
 <h1>About this site</h1>
@@ -11,3 +9,4 @@
 <p><strong>Believe it or not, this site is a web application!</strong></p>
 
 <p>To learn more about it, check out the source code on <a href="https://github.com/jakestambaugh/cs1520">GitHub</a></p>
+{% endblock %}
