@@ -9,8 +9,9 @@
 <form action="/quiz/{{ quiz.id }}" method="POST" autocomplete="off">
   <fieldset>
     <legend>Your Name and Pitt ID:</legend>
-    <p><label>Name</label> <input name="student-name"></p>
-    <p><label>ID</label> <input name="student-id"></p>
+    <p><label>PeopleSoft ID</label> <input name="student-id" id="student-id" type="text" oninput="attemptAutocomplete()"></p>
+    <p><label>Name</label> <input name="student-name" id="student-name"></p>
+    <p><label>Email</label> <input name="student-email" id="student-email"></p>
   </fieldset>
 
   <fieldset>
@@ -21,4 +22,12 @@
   </fieldset>
   <button type="submit">Submit quiz</button>
 </form>
+
+<script src="/static/quiz.js"></script>
+<script>
+  function attemptAutocomplete() {
+    let studentId = document.getElementById("student-id").value;
+    autocompleteName(studentId);
+  }
+</script>
 {% endblock %}

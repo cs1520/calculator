@@ -1,8 +1,13 @@
-from flask import Flask, render_template, request
+from flask import Flask, Response, abort, render_template, request
 from random import randint
-from storage import create_storage_client, list_slides
+import json
 
-from storage import create_datastore_client, list_slides, store_quiz_answer
+from storage import (
+    create_datastore_client,
+    list_slides,
+    store_quiz_answer,
+    read_student_info,
+)
 from quiz import Quiz
 
 app = Flask(__name__)
@@ -92,6 +97,18 @@ def process_quiz_answer(id):
     return render_template(
         "quiz_response.html", quiz_title="Week 4 Quiz", answers=request.form
     )
+
+
+@app.route("/student/<id>", methods=["GET"])
+def show_student_api(id):
+    if len(str(id)) != 7:
+        return abort(404)
+    student = read_student_info(datastore_client, id)
+    if student is None:
+        return abort(404)
+    output = {"name": student.name, "email": student.email}
+    resp = Response(json.dumps(output), mimetype="application/json")
+    return resp
 
 
 if __name__ == "__main__":
