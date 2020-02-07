@@ -1,3 +1,4 @@
+from datetime import datetime, timezone, timedelta
 from google.cloud import datastore
 from student import Student
 
@@ -15,9 +16,10 @@ def create_datastore_client():
 
 
 def create_view(metadata):
-    print(metadata)
+    utc_time_presented_at = metadata["presented_at"]
+    local_time_presented_at = utc_time_presented_at - timedelta(hours=5)
     return {
-        "date": metadata["presented_at"],
+        "date": local_time_presented_at,
         "title": metadata["title"],
         "url": metadata["public_url"],
     }
