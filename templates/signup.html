@@ -1,0 +1,40 @@
+{% extends "_base.html" %}
+{% block title %}Signup{% endblock %}
+
+<script>
+  // JavaScript for signing users up
+  function signupUser() {
+    // Read the form fields
+    let username = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
+    let passwordConf = document.getElementById("passwordConf").value;
+
+    if (password === passwordConf) {
+      document.getElementById("")
+    }
+  }
+</script>
+
+{% block content %}
+<form action="/auth/signup" method="POST">
+  <p>
+    <label>Username</label>
+    <input type="text" id="username" name="username">
+  </p>
+
+  <p>
+    <label>Password</label>
+    <input type="password" id="password" name="password">
+  </p>
+
+  <p>
+    <label>Confirm Password</label>
+    <input type="password" id="confirm-password" name="confirm-password">
+  </p>
+
+  <button type="submit" onclick="signupUser()">Sign Up</button>
+
+  <div id="status"></div>
+
+</form>
+{% endblock %}

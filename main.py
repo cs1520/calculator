@@ -111,5 +111,22 @@ def show_student_api(id):
     return resp
 
 
+@app.route("/auth/signup", methods=["GET"])
+def show_signup_form():
+    return render_template("signup.html")
+
+
+@app.route("/auth/signup", methods=["POST"])
+def handle_signup():
+    username = request.form.get("username")
+    password = request.form.get("password")
+    pass
+
+
+@app.route("/auth/login", methods=["GET"])
+def show_login_form():
+    return render_template("login.html")
+
+
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=8080, debug=True)
