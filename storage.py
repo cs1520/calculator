@@ -54,3 +54,10 @@ def read_student_info(datastore_client, student_id):
     s = Student(info["last_name"], info["first_name"], info["username"], student_id)
     return s
 
+
+def store_survey(datastore_client, survey_response):
+    key = datastore_client.key("SurveyResponse")
+    response = datastore.Entity(key=key)
+    for label, answer in survey_response.items():
+        response[label] = answer
+    datastore_client.put(response)

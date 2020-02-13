@@ -7,6 +7,7 @@ from storage import (
     list_slides,
     store_quiz_answer,
     read_student_info,
+    store_survey
 )
 from quiz import Quiz
 
@@ -56,6 +57,22 @@ def handle_about():
     Includes a link to this website's GitHub page.
     """
     return render_template("about.html")
+
+
+@app.route("/survey", methods=["GET"])
+def show_survey():
+    """Generate a page where students can give me feeback.
+
+    Hopefully they are nice!
+    """
+    return render_template("survey.html")
+
+
+@app.route("/survey", methods=["POST"])
+def handle_survey():
+    """Process the form fields from the survey"""
+    store_survey(datastore_client, request.form)
+    return render_template("survey_thanks.html")
 
 
 @app.route("/quiz/<id>", methods=["GET"])
