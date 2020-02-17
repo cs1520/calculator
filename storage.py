@@ -54,3 +54,16 @@ def read_student_info(datastore_client, student_id):
     s = Student(info["last_name"], info["first_name"], info["username"], student_id)
     return s
 
+
+def save_new_user(datastore_client, username, pw_hash):
+    user_key = datastore_client.key("User")
+    user = datastore.Entity(key=user_key)
+    user["username"] = username
+    user["password"] = pw_hash
+    datastore_client.put(user)
+
+
+def existing_users(datastore_client):
+    query = datastore_client.query(kind="User")
+    users = query.fetch()
+    return [u["username"] for u in users]

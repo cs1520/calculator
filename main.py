@@ -1,12 +1,15 @@
-from flask import Flask, Response, abort, render_template, request
+from flask import Flask, Response, abort, render_template, request, jsonify, redirect
 from random import randint
 import json
+import hashlib
 
 from storage import (
     create_datastore_client,
     list_slides,
     store_quiz_answer,
     read_student_info,
+    save_new_user,
+    existing_users,
 )
 from quiz import Quiz
 
@@ -27,7 +30,7 @@ def root():
     directory and fills in any variables.
     """
     fun_number = randint(45, 121)
-    return render_template("index.html", num=fun_number)
+    return render_template("index.html", num=fun_number, homepage=True)
 
 
 @app.route("/syllabus")
@@ -107,25 +110,51 @@ def show_student_api(id):
     if student is None:
         return abort(404)
     output = {"name": student.name, "email": student.email}
-    resp = Response(json.dumps(output), mimetype="application/json")
-    return resp
+    return jsonify(output)
 
 
 @app.route("/auth/signup", methods=["GET"])
 def show_signup_form():
-    return render_template("signup.html")
+    return render_template("signup.html", auth=True)
 
 
 @app.route("/auth/signup", methods=["POST"])
 def handle_signup():
     username = request.form.get("username")
-    password = request.form.get("password")
-    pass
+    password = get_password_hash(request.form.get("password"))
+    confirm = get_password_hash(request.form.get("confirm-password"))
+    if username in existing_users(datastore_client):
+        return render_template(
+            "signup.html", auth=True, error="A user with that username already exists"
+        )
+    if password != confirm:
+        return render_template(
+            "signup.html",
+            auth=True,
+            error="password does not match password confirmation",
+        )
+    save_new_user(datastore_client, username, password)
+    return redirect("/auth/login")
 
 
 @app.route("/auth/login", methods=["GET"])
 def show_login_form():
-    return render_template("login.html")
+    return render_template("login.html", auth=True)
+
+
+@app.route("/auth/login", methods=["POST"])
+def handle_login():
+    username = request.form.get("username")
+    password = get_password_hash(request.form.get("password"))
+    return username + " " + password
+
+
+def get_password_hash(pw):
+    """This will give us a hashed password that will be extremlely difficult to 
+    reverse.  Creating this as a separate function allows us to perform this
+    operation consistently every time we use it."""
+    encoded = pw.encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
 
 
 if __name__ == "__main__":

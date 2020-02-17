@@ -16,25 +16,27 @@
 </script>
 
 {% block content %}
-<form action="/auth/signup" method="POST">
-  <p>
-    <label>Username</label>
-    <input type="text" id="username" name="username">
-  </p>
+<div class="centered">
+  <form action="/auth/signup" method="POST">
+    <p>
+      <label>Username</label>
+      <input type="text" id="username" name="username">
+    </p>
 
-  <p>
-    <label>Password</label>
-    <input type="password" id="password" name="password">
-  </p>
+    <p>
+      <label>Password</label>
+      <input type="password" id="password" name="password">
+    </p>
 
-  <p>
-    <label>Confirm Password</label>
-    <input type="password" id="confirm-password" name="confirm-password">
-  </p>
+    <p>
+      <label>Confirm Password</label>
+      <input type="password" id="confirm-password" name="confirm-password">
+    </p>
 
-  <button type="submit" onclick="signupUser()">Sign Up</button>
+    <button type="submit" onclick="signupUser()">Sign Up</button>
 
-  <div id="status"></div>
+    <div id="status"></div>
 
-</form>
+  </form>
+</div>
 {% endblock %}
