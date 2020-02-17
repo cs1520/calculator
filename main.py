@@ -1,4 +1,13 @@
-from flask import Flask, Response, abort, render_template, request, jsonify, redirect
+from flask import (
+    Flask,
+    Response,
+    abort,
+    render_template,
+    request,
+    jsonify,
+    redirect,
+    session,
+)
 from random import randint
 import json
 import hashlib
@@ -10,10 +19,12 @@ from storage import (
     read_student_info,
     save_new_user,
     existing_users,
+    load_user,
 )
 from quiz import Quiz
 
 app = Flask(__name__)
+app.secret_key = b"20072012f35b38f51c782e21b478395891bb6be23a61d70a"
 
 # Initialization code for our storage layer
 datastore_client = create_datastore_client()
@@ -30,7 +41,8 @@ def root():
     directory and fills in any variables.
     """
     fun_number = randint(45, 121)
-    return render_template("index.html", num=fun_number, homepage=True)
+    user = session.get("user")
+    return render_template("index.html", num=fun_number, homepage=True, user=user)
 
 
 @app.route("/syllabus")
@@ -134,7 +146,8 @@ def handle_signup():
             error="password does not match password confirmation",
         )
     save_new_user(datastore_client, username, password)
-    return redirect("/auth/login")
+    session["user"] = username
+    return redirect("/")
 
 
 @app.route("/auth/login", methods=["GET"])
@@ -146,7 +159,11 @@ def show_login_form():
 def handle_login():
     username = request.form.get("username")
     password = get_password_hash(request.form.get("password"))
-    return username + " " + password
+    user = load_user(datastore_client, username, password)
+    if not user:
+        return render_template("login.html", auth=True, error="Password did not match.")
+    session["user"] = user["username"]
+    return redirect("/")
 
 
 def get_password_hash(pw):
@@ -155,6 +172,12 @@ def get_password_hash(pw):
     operation consistently every time we use it."""
     encoded = pw.encode("utf-8")
     return hashlib.sha256(encoded).hexdigest()
+
+
+def get_user():
+    """If our session has an identified user (i.e., a user is signed in), then
+    return that username."""
+    return session.get("user", None)
 
 
 if __name__ == "__main__":

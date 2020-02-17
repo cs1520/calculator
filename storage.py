@@ -63,7 +63,19 @@ def save_new_user(datastore_client, username, pw_hash):
     datastore_client.put(user)
 
 
+def load_user(datastore_client, username, pw_hash):
+    """Load a user based on the password hash. If the hash doesn't match the
+    username, then this should return None."""
+    q = datastore_client.query(kind="User")
+    q.add_filter("username", "=", username)
+    q.add_filter("password", "=", pw_hash)
+    for user in q.fetch():
+        return {"username": user["username"]}
+    return None
+
+
 def existing_users(datastore_client):
     query = datastore_client.query(kind="User")
     users = query.fetch()
     return [u["username"] for u in users]
+

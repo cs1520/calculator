@@ -26,9 +26,14 @@
     <a href="/">Back to home</a>
     {% endif %}
   </div>
-  {% if not auth %}
+  {% if not auth and not user %}
   <div class="login-link">
     <p><a href="/auth/login">Login</a></p>
+  </div>
+  {% endif %}
+  {% if user %}
+  <div>
+    <p>Hello, {{user}}</p>
   </div>
   {% endif %}
   {% if error %}
