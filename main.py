@@ -132,6 +132,7 @@ def show_signup_form():
 
 @app.route("/auth/signup", methods=["POST"])
 def handle_signup():
+    # TODO https://auth0.com/blog/adding-salt-to-hashing-a-better-way-to-store-passwords/
     username = request.form.get("username")
     password = get_password_hash(request.form.get("password"))
     confirm = get_password_hash(request.form.get("confirm-password"))
