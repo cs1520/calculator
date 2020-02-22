@@ -10,24 +10,22 @@ from flask import (
 )
 from random import randint
 import json
-import hashlib
 
 from storage import (
     create_datastore_client,
     list_slides,
     store_quiz_answer,
     read_student_info,
-    save_new_user,
-    existing_users,
-    load_user,
 )
 from quiz import Quiz
+import user
 
 app = Flask(__name__)
 app.secret_key = b"20072012f35b38f51c782e21b478395891bb6be23a61d70a"
 
 # Initialization code for our storage layer
 datastore_client = create_datastore_client()
+userstore = user.UserStore(datastore_client)
 
 
 @app.route("/")
@@ -132,21 +130,16 @@ def show_signup_form():
 
 @app.route("/auth/signup", methods=["POST"])
 def handle_signup():
-    # TODO https://auth0.com/blog/adding-salt-to-hashing-a-better-way-to-store-passwords/
     username = request.form.get("username")
-    password = get_password_hash(request.form.get("password"))
-    confirm = get_password_hash(request.form.get("confirm-password"))
-    if username in existing_users(datastore_client):
+    password = request.form.get("password")
+    bio = request.form.get("bio")
+    if username in userstore.list_existing_users():
         return render_template(
             "signup.html", auth=True, error="A user with that username already exists"
         )
-    if password != confirm:
-        return render_template(
-            "signup.html",
-            auth=True,
-            error="password does not match password confirmation",
-        )
-    save_new_user(datastore_client, username, password)
+    # TODO: make this transactional so that we don't have a user without a profile
+    userstore.store_new_credentials(user.generate_creds(username, password))
+    userstore.store_new_profile(user.UserProfile(username, bio))
     session["user"] = username
     return redirect("/")
 
@@ -159,20 +152,24 @@ def show_login_form():
 @app.route("/auth/login", methods=["POST"])
 def handle_login():
     username = request.form.get("username")
-    password = get_password_hash(request.form.get("password"))
-    user = load_user(datastore_client, username, password)
+    password = request.form.get("password")
+    user = userstore.verify_password(username, password)
     if not user:
         return render_template("login.html", auth=True, error="Password did not match.")
-    session["user"] = user["username"]
+    session["user"] = user.username
     return redirect("/")
 
 
-def get_password_hash(pw):
-    """This will give us a hashed password that will be extremlely difficult to 
-    reverse.  Creating this as a separate function allows us to perform this
-    operation consistently every time we use it."""
-    encoded = pw.encode("utf-8")
-    return hashlib.sha256(encoded).hexdigest()
+@app.route("/auth/logout")
+def handle_logout():
+    session.clear()
+    return redirect("/")
+
+
+@app.route("/user")
+def check_user_exists():
+    username = request.args.get("username")
+    return jsonify({"exists": username in userstore.list_existing_users()})
 
 
 def get_user():
