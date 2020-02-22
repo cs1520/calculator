@@ -15,10 +15,10 @@ from storage import (
     create_datastore_client,
     list_slides,
     store_quiz_answer,
-    read_student_info,
 )
 from quiz import Quiz
 import user
+import student
 
 app = Flask(__name__)
 app.secret_key = b"20072012f35b38f51c782e21b478395891bb6be23a61d70a"
@@ -116,10 +116,10 @@ def process_quiz_answer(id):
 def show_student_api(id):
     if len(str(id)) != 7:
         return abort(404)
-    student = read_student_info(datastore_client, id)
-    if student is None:
+    s = student.read_student_info(datastore_client, id)
+    if s is None:
         return abort(404)
-    output = {"name": student.name, "email": student.email}
+    output = {"name": s.name, "email": s.email}
     return jsonify(output)
 
 
@@ -169,6 +169,7 @@ def handle_logout():
 @app.route("/user")
 def check_user_exists():
     username = request.args.get("username")
+    # TODO: make this faster than loading all users and iterating each time
     return jsonify({"exists": username in userstore.list_existing_users()})
 
 
