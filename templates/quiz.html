@@ -27,7 +27,9 @@
 <script>
   function attemptAutocomplete() {
     let studentId = document.getElementById("student-id").value;
-    autocompleteName(studentId);
+    if(studentId.length === 7) {
+      autocompleteName(studentId);
+    }
   }
 </script>
 {% endblock %}
