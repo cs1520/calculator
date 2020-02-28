@@ -1,5 +1,6 @@
-from google.cloud import datastore
+from google.cloud import datastore, storage
 
+import datetime
 import hashlib
 import os
 
@@ -32,14 +33,16 @@ class UserProfile:
         self.username = username
         self.bio = bio
 
+# https://cloud.google.com/storage/docs/access-control/signing-urls-with-helpers#storage-signed-url-object-python
 
 class UserStore:
     """This class will serve as our Data Access Object
     All of the methods to access the database will be here
     """
 
-    def __init__(self, datastore_client):
+    def __init__(self, datastore_client, storage_client):
         self.ds = datastore_client
+        self.s = storage_client
 
     def verify_password(self, username, password, txn=None):
         """Load a user based on the password hash. If the hash doesn't match the
@@ -79,4 +82,18 @@ class UserStore:
         query = self.ds.query(kind="UserProfile")
         users = query.fetch()
         return [u["username"] for u in users]
+
+    def create_avatar_upload_url(self, image_name, content_type):
+        bucket = self.s.bucket("jake1520.appspot.com")
+        blob = bucket.blob(image_name)
+
+        url = blob.generate_signed_url(
+            version="v4",
+            # This URL is valid for 15 minutes
+            expiration=datetime.timedelta(minutes=15),
+            # Allow PUT requests using this URL
+            method="PUT",
+            content_type=content_type,
+        )
+        return url
 

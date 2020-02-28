@@ -13,6 +13,7 @@ import json
 
 from storage import (
     create_datastore_client,
+    create_storage_client,
     list_slides,
     store_quiz_answer,
 )
@@ -25,7 +26,8 @@ app.secret_key = b"20072012f35b38f51c782e21b478395891bb6be23a61d70a"
 
 # Initialization code for our storage layer
 datastore_client = create_datastore_client()
-userstore = user.UserStore(datastore_client)
+storage_client = create_storage_client()
+userstore = user.UserStore(datastore_client, storage_client)
 
 
 @app.route("/")
@@ -168,10 +170,43 @@ def handle_logout():
 
 @app.route("/user")
 def check_user_exists():
+    """This is a weird one, I'm only really calling this function to check for duplicate usernames."""
     username = request.args.get("username")
     # TODO: make this faster than loading all users and iterating each time
     return jsonify({"exists": username in userstore.list_existing_users()})
 
+
+@app.route("/profile")
+def show_profile():
+    user = get_user()
+    if not user:
+        redirect("/auth/login")
+    return render_template("profile.html")
+
+
+@app.route("/profile/edit")
+def edit_profile():
+    user = get_user()
+    if not user:
+        redirect("/auth/login")
+    return render_template("profile_edit.html", user=user)
+
+@app.route("/profile/generate_avatar_url", methods=["PUT"])
+def generate_avatar_url():
+    """This endpoint expects 1. a filename and 2. a content type
+    """
+    print(request.is_json)
+    print(request.data)
+    print(request.is_json)
+    if not request.is_json:
+        abort(404)
+    filename = request.json["filename"]
+    content_type = request.json["contentType"]
+    if not (filename and content_type):
+        # One of the fields was missing in the JSON request
+        abort(404)
+    avatar_url = userstore.create_avatar_upload_url(filename, content_type)
+    return jsonify({"signedUrl": avatar_url})
 
 def get_user():
     """If our session has an identified user (i.e., a user is signed in), then

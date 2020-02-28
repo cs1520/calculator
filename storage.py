@@ -1,5 +1,5 @@
 from datetime import datetime, timezone, timedelta
-from google.cloud import datastore
+from google.cloud import datastore, storage
 from student import Student
 
 
@@ -13,6 +13,10 @@ def create_datastore_client():
     code.
     """
     return datastore.Client()
+
+
+def create_storage_client():
+    return storage.Client()
 
 
 def create_view(metadata):
