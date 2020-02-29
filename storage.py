@@ -48,3 +48,10 @@ def store_quiz_answer(datastore_client, user, quiz_id, answers):
 
     datastore_client.put(quiz_answer)
 
+    
+def store_survey(datastore_client, survey_response):
+    key = datastore_client.key("SurveyResponse")
+    response = datastore.Entity(key=key)
+    for label, answer in survey_response.items():
+        response[label] = answer
+    datastore_client.put(response)

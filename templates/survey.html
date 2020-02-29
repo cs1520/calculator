@@ -1,0 +1,86 @@
+{% extends "_base.html" %}
+{% block title %}Feedback Survey{% endblock %}
+
+{% block content %}
+<style>
+  td {
+    width:40em;
+  }
+</style>
+
+
+<a href="/">Back to home</a>
+
+<h2>Mid Semester Feedback</h2>
+
+<p>Please fill out any questions that you question, and click "submit" when you are finished</p>
+
+<form action="/survey" method="POST" autocomplete="off">
+<table>
+  <tr>
+    <td>
+      <p>From 1 (very easy) to 5 (very tough), how would you rate the difficulty of CS 1520?</p>
+    </td>
+    <td>
+      <label for="difficulty1">1</label><input type="radio" id="difficulty1" name="difficulty" value="1">
+      <label for="difficulty2">2</label><input type="radio" id="difficulty2" name="difficulty" value="2">
+      <label for="difficulty3">3</label><input type="radio" id="difficulty3" name="difficulty" value="3">
+      <label for="difficulty4">4</label><input type="radio" id="difficulty4" name="difficulty" value="4">
+      <label for="difficulty5">5</label><input type="radio" id="difficulty5" name="difficulty" value="5">
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <p>From 1 (every word is new to me) to 5 (I could write the textbook), how much of the material so far is new to you?</p>
+    </td>
+    <td>
+      <label for="prior-knowledge1">1</label><input type="radio" id="prior-knowledge1" name="prior-knowledge" value="1">
+      <label for="prior-knowledge2">2</label><input type="radio" id="prior-knowledge2" name="prior-knowledge" value="2">
+      <label for="prior-knowledge3">3</label><input type="radio" id="prior-knowledge3" name="prior-knowledge" value="3">
+      <label for="prior-knowledge4">4</label><input type="radio" id="prior-knowledge4" name="prior-knowledge" value="4">
+      <label for="prior-knowledge5">5</label><input type="radio" id="prior-knowledge5" name="prior-knowledge" value="5">
+    </td>
+  </tr>  
+  <tr>
+    <td>
+      <p>From 1 (this stinks) to 5 (better than lazer tag), how much are you enjoying CS 1520?</p>
+    </td>
+    <td>
+      <label for="enjoyment1">1</label><input type="radio" id="enjoyment1" name="enjoyment" value="1">
+      <label for="enjoyment2">2</label><input type="radio" id="enjoyment2" name="enjoyment" value="2">
+      <label for="enjoyment3">3</label><input type="radio" id="enjoyment3" name="enjoyment" value="3">
+      <label for="enjoyment4">4</label><input type="radio" id="enjoyment4" name="enjoyment" value="4">
+      <label for="enjoyment5">5</label><input type="radio" id="enjoyment5" name="enjoyment" value="5">
+    </td>
+  </tr>  
+  <tr>
+    <td>
+      <p>From 1 (I will never use this again) to 5 (I will probably apply this every day for the rest of my life), how much practical knowledge do you feel you have learned from CS 1520?</p>
+    </td>
+    <td>
+      <label for="practical1">1</label><input type="radio" id="practical1" name="practical" value="1">
+      <label for="practical2">2</label><input type="radio" id="practical2" name="practical" value="2">
+      <label for="practical3">3</label><input type="radio" id="practical3" name="practical" value="3">
+      <label for="practical4">4</label><input type="radio" id="practical4" name="practical" value="4">
+      <label for="practical5">5</label><input type="radio" id="practical5" name="practical" value="5">
+    </td>
+  </tr>
+</table>
+<p><label for="going-well">What, if anything, do you like about the format/delivery of the lectures?</label></p>
+<textarea name="going-well" id="going-well" rows="15" cols="40"></textarea>
+
+<p><label for="improve">What, if anything, would you like to change about the format/delivery of the lectures?</label></p>
+<textarea name="improve" id="improve" rows="15" cols="40"></textarea>
+
+<p><label for="topics">What topics would you like to cover during the remaining lectures?</label></p>
+<textarea name="topics" id="topics" rows="15" cols="40"></textarea>
+
+<p><label for="other">Any other feedback?</label></p>
+<textarea name="other" id="other" rows="15" cols="40"></textarea>
+
+<br>
+
+<button type="submit">Submit feedback</button>
+</form>
+{% endblock %}
+

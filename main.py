@@ -16,10 +16,11 @@ from storage import (
     create_storage_client,
     list_slides,
     store_quiz_answer,
+    read_student_info,
+    store_survey,
 )
-from quiz import Quiz
-import user
 import student
+from quiz import Quiz, QuizStore
 
 app = Flask(__name__)
 app.secret_key = b"20072012f35b38f51c782e21b478395891bb6be23a61d70a"
@@ -28,6 +29,8 @@ app.secret_key = b"20072012f35b38f51c782e21b478395891bb6be23a61d70a"
 datastore_client = create_datastore_client()
 storage_client = create_storage_client()
 userstore = user.UserStore(datastore_client, storage_client)
+
+quiz_store = QuizStore(datastore_client)
 
 
 @app.route("/")
@@ -73,35 +76,31 @@ def handle_about():
     return render_template("about.html")
 
 
+@app.route("/survey", methods=["GET"])
+def show_survey():
+    """Generate a page where students can give me feeback.
+
+    Hopefully they are nice!
+    """
+    return render_template("survey.html")
+
+
+@app.route("/survey", methods=["POST"])
+def handle_survey():
+    """Process the form fields from the survey"""
+    store_survey(datastore_client, request.form)
+    return render_template("survey_thanks.html")
+
+
 @app.route("/quiz/<id>", methods=["GET"])
 def show_quiz(id):
     """Presents a quiz to a user
 
     This is a hardcoded quiz, but in the future I will present different quizzes based on id
     """
-    quiz = Quiz(
-        "Week 4 Quiz",
-        id,
-        [
-            {
-                "description": "What markup language describes the structure of web pages?"
-            },
-            {"description": "What language is used to style web pages?"},
-            {
-                "description": "What file can be used to serve static resources in App Engine?"
-            },
-            {
-                "description": "What file did the Cow Clicker project store all of the style markup in?"
-            },
-            {
-                "description": "What property can we set on HTML elements to run our own JavaScript when clicked?"
-            },
-            {"description": "What assignment is due next week?"},
-            {"description": "What is the username of your first group member?"},
-            {"description": "What is the username of your second group member?"},
-            {"description": "What is the username of your third group member?"},
-        ],
-    )
+    quiz = quiz_store.load_quiz(id)
+    if not quiz:
+        abort(404)
     return render_template("quiz.html", quiz=quiz)
 
 
