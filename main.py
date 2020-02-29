@@ -16,10 +16,10 @@ from storage import (
     create_storage_client,
     list_slides,
     store_quiz_answer,
-    read_student_info,
     store_survey,
 )
 import student
+import user
 from quiz import Quiz, QuizStore
 
 app = Flask(__name__)
@@ -190,6 +190,7 @@ def edit_profile():
         redirect("/auth/login")
     return render_template("profile_edit.html", user=user)
 
+
 @app.route("/profile/generate_avatar_url", methods=["PUT"])
 def generate_avatar_url():
     """This endpoint expects 1. a filename and 2. a content type
@@ -206,6 +207,7 @@ def generate_avatar_url():
         abort(404)
     avatar_url = userstore.create_avatar_upload_url(filename, content_type)
     return jsonify({"signedUrl": avatar_url})
+
 
 def get_user():
     """If our session has an identified user (i.e., a user is signed in), then
