@@ -1,26 +1,10 @@
-<!DOCTYPE html>
-<!-- This html file includes more tags than it needs to, but it shows the structure of the document very explicitly -->
-<!-- Check out the other .html files in this project for a reduced set of tags that will still parse correctly -->
-<html>
-<head>
-  <!-- Almost everything inside of the head tag is for metadata only. It is also where dependency files (like CSS and Javascript) can be loaded. -->
-  <!-- Nothing in this block appears in the document -->
-  <title>CS 1520: Programming Languages for Web Applications</title>
-  <meta name="author" content="Jake Stambaugh">
-  <meta name="description" content="The course webpage for CS 1520: Programming Languages for Web Applications at the University of Pittsburgh">
-</head>
-<body>
-  <!-- The body tag describes everything in the frame of the web browser -->
-  <div class="navbar">
-    <h1>Web Apps</h1>
-    <ul>
-      <li><a href="/lecture">Lectures</a></li>
-      <li><a href="/syllabus">Syllabus</a></li>
-      <li><a href="/about">About this site</a></li>
-      <li><a href="/survey">Feedback</a></li>
-    </ul>
-  </div>
-  <div class="center">
+{% extends "_base.html" %}
+
+{% block title %}CS 1520: Programming Languages for Web Applications{% endblock %}
+
+{% block content %}
+<!-- The body tag describes everything in the frame of the web browser -->
+<div class="center">
     <h2>CS 1520: Programming Languages for Web Applications</h2>
     <p>Welcome to the class page!</p>
     <p>It may look sparse for now, but I'll continue adding features as we cover more web technologies in class.</p>

@@ -1,0 +1,78 @@
+{% extends "_base.html" %}
+{% block title %}Edit Profile{% endblock %}
+<!--Borrowed heavily from this Medium post-->
+<!--https://medium.com/imersotechblog/upload-files-to-google-cloud-storage-gcs-from-the-browser-159810bb11e3-->
+<a href="/profile">Back to profile</a>
+
+{% block content %}
+<h1>Edit Profile {{user.username}}</h1>
+
+<form id="form">
+   <label for="avatar">Upload a profile picture</label> <input type="file" id="avatar" name="avatar"><br>
+   <input type="button" id="button">
+</form>
+
+<script>
+function getFileToUpload() {
+    return document.getElementById("avatar").files[0];
+}
+
+function getSignedUrlFromBackend(file) {
+    const xhr = new XMLHttpRequest();
+    xhr.responseType = "json";
+    xhr.open("PUT", "/profile/generate_avatar_url", true)
+    xhr.onload = () => {
+        const status = xhr.status; if (status === 200) {
+            const jsonResponse = xhr.response;
+            var signedUrl = jsonResponse["signedUrl"];
+            console.log(signedUrl);
+            uploadFileToCloudStorage(signedUrl)
+        } else {
+            alert("Something went wrong");
+        }
+    };
+    xhr.onerror = () => {
+        alert("Something went wrong");
+    };
+    xhr.setRequestHeader("Content-Type", "application/json");
+    const reqBody = JSON.stringify({"filename": file.name, "contentType": file.type});
+    console.log(reqBody);
+    xhr.send(reqBody);
+}
+
+function uploadFileToCloudStorage(signedUrl) {
+    
+    // this can be a file from e.g. <input type="file"/>
+    const file = getFileToUpload();
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("PUT", signedUrl, true);
+    xhr.onload = () => {
+        const status = xhr.status;
+        if (status === 200) {
+            alert("File is uploaded");
+        } else {
+            alert("Something went wrong!");
+        }
+    };
+
+    xhr.onerror = () => {
+        alert("Something went wrong");
+    };
+    xhr.setRequestHeader('Content-Type', file.type);
+    xhr.send(file);
+}
+
+function buttonClick(event) {
+    console.log("Submitting");
+    const file = getFileToUpload()
+    getSignedUrlFromBackend(file)
+    event.preventDefault();
+    event.stopPropagation();
+}
+
+const b = document.getElementById("button");
+b.onclick = buttonClick;
+
+</script>
+{% endblock %}

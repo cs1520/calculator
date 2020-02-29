@@ -1,0 +1,72 @@
+{% extends "_base.html" %}
+{% block title %}Signup{% endblock %}
+
+{% block content %}
+<div class="centered">
+  <form action="/auth/signup" method="POST">
+    <p>
+      <label>Username</label>
+      <input type="text" id="username" name="username" required>
+    </p>
+
+    <p>
+      <label>Password</label>
+      <input type="password" id="password" name="password" required>
+    </p>
+
+    <p>
+      <label>Confirm Password</label>
+      <input type="password" id="confirm-password" name="confirm-password" required>
+    </p>
+
+    <p>
+      <label>Bio</label>
+      <input type="text" id="bio" name="bio" required>
+    </p>
+
+    <button type="submit">Sign Up</button>
+  </form>
+</div>
+
+<script>
+  var username = document.getElementById("username");
+  var password = document.getElementById("password");
+  var confirm_password = document.getElementById("confirm-password");
+
+  function validateUniqueUsername()
+  {
+    fetch('/user?username=' + username.value)
+      .then((response) => {
+        console.log(response)
+        return response.json()
+      })
+      .then((data) => {
+        console.log(data)
+        if(data.exists == true) {
+          username.setCustomValidity("Username already exists");
+          username.reportValidity();
+        }
+      });
+  }
+  username.onchange = validateUniqueUsername;
+  
+  function validatePassword()
+  {
+      if(password.value != confirm_password.value)
+      {
+          confirm_password.setCustomValidity("Passwords Don't Match");
+          confirm_password.reportValidity();
+      } 
+      else if(password.value.trim() == "")
+      {
+          password.setCustomValidity("Passwords must not be empty");
+          password.reportValidity();
+      } else
+      {
+          password.setCustomValidity("");
+      }
+  }
+  password.onchange = validatePassword;
+  confirm_password.onchange = validatePassword;
+</script>
+{% endblock %}

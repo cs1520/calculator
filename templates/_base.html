@@ -1,8 +1,45 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<!-- This is omitting some of the optional html tags -->
-<!-- https://html.spec.whatwg.org/multipage/syntax.html#optional-tags -->
-<title>CS 1520: {% block title %}{% endblock %}</title>
 
-{% block content %}
-{% endblock%}
+<head>
+  <!-- Almost everything inside of the head tag is for metadata only. It is also where dependency files (like CSS and Javascript) can be loaded. -->
+  <!-- Nothing in this block appears in the document -->
+  <meta charset="utf-8">
+  <!-- This is omitting some of the optional html tags -->
+  <!-- https://html.spec.whatwg.org/multipage/syntax.html#optional-tags -->
+  <title>CS 1520: {% block title %}{% endblock %}</title>
+  <meta name="author" content="Jake Stambaugh">
+  <meta name="description"
+    content="The course webpage for CS 1520: Programming Languages for Web Applications at the University of Pittsburgh">
+  <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+
+<body>
+  <div class="navbar">
+    <h1>Web Apps</h1>
+    {% if homepage %}
+    <ul>
+      <li><a href="/lecture">Lectures</a></li>
+      <li><a href="/syllabus">Syllabus</a></li>
+      <li><a href="/about">About this site</a></li>
+    </ul>
+    {% else %}
+    <a href="/">Back to home</a>
+    {% endif %}
+  </div>
+  {% if not auth and not user %}
+  <div class="login-link">
+    <p><a href="/auth/login">Login</a></p>
+  </div>
+  {% endif %}
+  {% if user %}
+  <div>
+    <p>Hello, {{user}}</p>
+    <p><a href="/auth/logout">Logout</a></p>
+  </div>
+  {% endif %}
+  {% if error %}
+  <span class="error">{{error}}</span>
+  {% endif %}
+  {% block content %}
+  {% endblock%}
+</body>

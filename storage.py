@@ -1,5 +1,5 @@
 from datetime import datetime, timezone, timedelta
-from google.cloud import datastore
+from google.cloud import datastore, storage
 from student import Student
 
 
@@ -13,6 +13,10 @@ def create_datastore_client():
     code.
     """
     return datastore.Client()
+
+
+def create_storage_client():
+    return storage.Client()
 
 
 def create_view(metadata):
@@ -44,17 +48,7 @@ def store_quiz_answer(datastore_client, user, quiz_id, answers):
 
     datastore_client.put(quiz_answer)
 
-
-def read_student_info(datastore_client, student_id):
-    student_key = datastore_client.key("Student", str(student_id))
-    print("Searching for " + str(student_id))
-    info = datastore_client.get(key=student_key)
-    if info is None:
-        return None
-    s = Student(info["last_name"], info["first_name"], info["username"], student_id)
-    return s
-
-
+    
 def store_survey(datastore_client, survey_response):
     key = datastore_client.key("SurveyResponse")
     response = datastore.Entity(key=key)

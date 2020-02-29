@@ -1,20 +1,34 @@
-from flask import Flask, Response, abort, render_template, request
+from flask import (
+    Flask,
+    Response,
+    abort,
+    render_template,
+    request,
+    jsonify,
+    redirect,
+    session,
+)
 from random import randint
 import json
 
 from storage import (
     create_datastore_client,
+    create_storage_client,
     list_slides,
     store_quiz_answer,
     read_student_info,
     store_survey,
 )
+import student
 from quiz import Quiz, QuizStore
 
 app = Flask(__name__)
+app.secret_key = b"20072012f35b38f51c782e21b478395891bb6be23a61d70a"
 
 # Initialization code for our storage layer
 datastore_client = create_datastore_client()
+storage_client = create_storage_client()
+userstore = user.UserStore(datastore_client, storage_client)
 
 quiz_store = QuizStore(datastore_client)
 
@@ -30,7 +44,8 @@ def root():
     directory and fills in any variables.
     """
     fun_number = randint(45, 121)
-    return render_template("index.html", num=fun_number)
+    user = session.get("user")
+    return render_template("index.html", num=fun_number, homepage=True, user=user)
 
 
 @app.route("/syllabus")
@@ -102,12 +117,100 @@ def process_quiz_answer(id):
 def show_student_api(id):
     if len(str(id)) != 7:
         return abort(404)
-    student = read_student_info(datastore_client, id)
-    if student is None:
+    s = student.read_student_info(datastore_client, id)
+    if s is None:
         return abort(404)
-    output = {"name": student.name, "email": student.email}
-    resp = Response(json.dumps(output), mimetype="application/json")
-    return resp
+    output = {"name": s.name, "email": s.email}
+    return jsonify(output)
+
+
+@app.route("/auth/signup", methods=["GET"])
+def show_signup_form():
+    return render_template("signup.html", auth=True)
+
+
+@app.route("/auth/signup", methods=["POST"])
+def handle_signup():
+    username = request.form.get("username")
+    password = request.form.get("password")
+    bio = request.form.get("bio")
+    if username in userstore.list_existing_users():
+        return render_template(
+            "signup.html", auth=True, error="A user with that username already exists"
+        )
+    # TODO: make this transactional so that we don't have a user without a profile
+    userstore.store_new_credentials(user.generate_creds(username, password))
+    userstore.store_new_profile(user.UserProfile(username, bio))
+    session["user"] = username
+    return redirect("/")
+
+
+@app.route("/auth/login", methods=["GET"])
+def show_login_form():
+    return render_template("login.html", auth=True)
+
+
+@app.route("/auth/login", methods=["POST"])
+def handle_login():
+    username = request.form.get("username")
+    password = request.form.get("password")
+    user = userstore.verify_password(username, password)
+    if not user:
+        return render_template("login.html", auth=True, error="Password did not match.")
+    session["user"] = user.username
+    return redirect("/")
+
+
+@app.route("/auth/logout")
+def handle_logout():
+    session.clear()
+    return redirect("/")
+
+
+@app.route("/user")
+def check_user_exists():
+    """This is a weird one, I'm only really calling this function to check for duplicate usernames."""
+    username = request.args.get("username")
+    # TODO: make this faster than loading all users and iterating each time
+    return jsonify({"exists": username in userstore.list_existing_users()})
+
+
+@app.route("/profile")
+def show_profile():
+    user = get_user()
+    if not user:
+        redirect("/auth/login")
+    return render_template("profile.html")
+
+
+@app.route("/profile/edit")
+def edit_profile():
+    user = get_user()
+    if not user:
+        redirect("/auth/login")
+    return render_template("profile_edit.html", user=user)
+
+@app.route("/profile/generate_avatar_url", methods=["PUT"])
+def generate_avatar_url():
+    """This endpoint expects 1. a filename and 2. a content type
+    """
+    print(request.is_json)
+    print(request.data)
+    print(request.is_json)
+    if not request.is_json:
+        abort(404)
+    filename = request.json["filename"]
+    content_type = request.json["contentType"]
+    if not (filename and content_type):
+        # One of the fields was missing in the JSON request
+        abort(404)
+    avatar_url = userstore.create_avatar_upload_url(filename, content_type)
+    return jsonify({"signedUrl": avatar_url})
+
+def get_user():
+    """If our session has an identified user (i.e., a user is signed in), then
+    return that username."""
+    return session.get("user", None)
 
 
 if __name__ == "__main__":
