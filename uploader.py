@@ -1,7 +1,7 @@
 import csv
 from datetime import datetime as dt
 from google.cloud import datastore
-from student import Student
+from student import Student, get_all_email
 
 from quiz import Quiz
 
@@ -79,7 +79,10 @@ def check():
 
 
 def main():
-    check()
+    l = get_all_email(datastore.Client())
+    print(len(l))
+    for e in l:
+        print(e + ",")
 
 
 if __name__ == "__main__":

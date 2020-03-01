@@ -9,9 +9,11 @@
 
 <form id="form">
    <label for="avatar">Upload a profile picture</label> <input type="file" id="avatar" name="avatar"><br>
-   <input type="button" id="button">
+   <input type="button" id="button" value="Upload photo">
 </form>
 
+<form id="profile-form" action="/profile/edit" method="POST">
+    <p><label>Bio</label> <textarea name="bio" id="bio" cols="30" rows="10"></textarea></p>
 <script>
 function getFileToUpload() {
     return document.getElementById("avatar").files[0];

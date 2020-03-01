@@ -22,3 +22,13 @@ def read_student_info(datastore_client, student_id):
         return None
     s = Student(info["last_name"], info["first_name"], info["username"], student_id)
     return s
+
+
+def get_all_email(datastore_client):
+    q = datastore_client.query(kind="Student")
+    result = q.fetch()
+    students = [
+        Student(info["last_name"], info["first_name"], info["username"], None)
+        for info in result
+    ]
+    return [s.email for s in students]
