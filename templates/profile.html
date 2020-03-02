@@ -1,7 +1,11 @@
-<!DOCTYPE html>
-<meta charset="utf-8">
-<!-- DO NOT SUBMIT: Fix Page Title. Missing tags? http://go/optional-html -->
-<title>Page Title</title>
+{% extends "_base.html" %}
+{% block title %}{{ profile.username }}{% endblock %}
 
-<p>{{ profile_user.username }}</p>
-{% if profile_user == user %}
+{% block content %}
+<p>{{ profile.username }}</p>
+<img src="{{ profile.avatar_url }}" alt="Profile image of {{ profile.username }}">
+
+<br>
+
+<a href="profile/edit" >Edit this profile</a>
+{% endblock %}

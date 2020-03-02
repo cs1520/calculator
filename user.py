@@ -29,11 +29,15 @@ def hash_password(password, salt):
 
 
 class UserProfile:
-    def __init__(self, username, bio):
+    def __init__(self, username, bio, avatar_id, avatar_url=None):
         self.username = username
         self.bio = bio
+        self.avatar_id = avatar_id  # Id of the blob in Cloud Storage
+        self.avatar_url = avatar_url
+
 
 # https://cloud.google.com/storage/docs/access-control/signing-urls-with-helpers#storage-signed-url-object-python
+
 
 class UserStore:
     """This class will serve as our Data Access Object
@@ -71,12 +75,22 @@ class UserStore:
         p = datastore.Entity(key=profile_key)
         p["username"] = profile.username
         p["bio"] = profile.bio
+        if profile.avatar_id:
+            p["avatar_id"] = profile.avatar_id
         self.ds.put(p)
 
     def load_user_profile(self, username, txn=None):
         profile_key = self.ds.key("UserProfile", username)
         profile = self.ds.get(profile_key)
-        return UserProfile(profile["username"], profile["bio"])
+        if "avatar_id" in profile.keys():
+            avatar_id = profile["avatar_id"]
+            avatar_url = self.create_avatar_display_url(image_name=profile["avatar_id"])
+        else:
+            avatar_id = None
+            avatar_url = None
+        return UserProfile(
+            profile["username"], profile["bio"], avatar_id, avatar_url=avatar_url,
+        )
 
     def list_existing_users(self, txn=None):
         query = self.ds.query(kind="UserProfile")
@@ -94,6 +108,21 @@ class UserStore:
             # Allow PUT requests using this URL
             method="PUT",
             content_type=content_type,
+        )
+        return url
+
+    def create_avatar_display_url(self, image_name):
+        bucket = self.s.bucket("jake1520.appspot.com")
+        blob = bucket.blob(image_name)
+
+        url = blob.generate_signed_url(
+            version="v4",
+            # This URL is valid for 15 minutes
+            expiration=datetime.timedelta(minutes=15),
+            # Allow GET requests using this URL
+            method="GET",
+            # Note that when content type information is encoded in the blob
+            content_type=blob.content_type,
         )
         return url
 
