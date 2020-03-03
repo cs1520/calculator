@@ -16,7 +16,7 @@ def create_datastore_client():
 
 
 def create_storage_client():
-    return storage.Client()
+    return storage.Client.from_service_account_json("credentials.json")
 
 
 def create_view(metadata):
