@@ -21,6 +21,7 @@ from storage import (
 import student
 from user import UserCredential, UserProfile, UserStore
 from quiz import Quiz, QuizStore
+from video import VideoStore
 
 app = Flask(__name__)
 app.secret_key = b"20072012f35b38f51c782e21b478395891bb6be23a61d70a"
@@ -32,20 +33,19 @@ userstore = UserStore(datastore_client, storage_client)
 
 quiz_store = QuizStore(datastore_client)
 
+video_store = VideoStore(datastore_client)
+
 
 @app.route("/")
 def root():
     """Generate the homepage
 
-    Gets a random number from the randint function, passing it to the
-    template.
-
     The render_template function reads an HTML file from the "templates"
     directory and fills in any variables.
     """
-    fun_number = randint(45, 121)
     user = session.get("user")
-    return render_template("index.html", num=fun_number, homepage=True, user=user)
+    videos = video_store.fetch_videos()
+    return render_template("index.html", videos=videos, homepage=True, user=user)
 
 
 @app.route("/syllabus")
@@ -76,6 +76,12 @@ def handle_about():
     return render_template("about.html")
 
 
+@app.route("/videos")
+def handle_videos():
+    videos = video_store.fetch_videos()
+    return render_template("videos.html", videos=videos)
+
+
 @app.route("/survey", methods=["GET"])
 def show_survey():
     """Generate a page where students can give me feeback.
@@ -98,10 +104,11 @@ def show_quiz(id):
 
     This is a hardcoded quiz, but in the future I will present different quizzes based on id
     """
+    user = get_user()
     quiz = quiz_store.load_quiz(id)
     if not quiz:
         abort(404)
-    return render_template("quiz.html", quiz=quiz)
+    return render_template("quiz.html", quiz=quiz, user=user)
 
 
 @app.route("/quiz/<id>", methods=["POST"])
@@ -126,6 +133,9 @@ def show_student_api(id):
 
 @app.route("/auth/signup", methods=["GET"])
 def show_signup_form():
+    user = get_user()
+    if user:
+        redirect("/")
     return render_template("signup.html", auth=True)
 
 
@@ -147,6 +157,9 @@ def handle_signup():
 
 @app.route("/auth/login", methods=["GET"])
 def show_login_form():
+    user = get_user()
+    if user:
+        redirect("/")
     return render_template("login.html", auth=True)
 
 
@@ -181,7 +194,7 @@ def show_profile():
     if not user:
         redirect("/auth/login")
     profile = userstore.load_user_profile(user)
-    return render_template("profile.html", profile=profile)
+    return render_template("profile.html", profile=profile, user=user)
 
 
 @app.route("/profile/edit", methods=["GET"])

@@ -7,8 +7,20 @@
 <div class="center">
   <h2>CS 1520: Programming Languages for Web Applications</h2>
   <p>Welcome to the class page!</p>
-  <p>It may look sparse for now, but I'll continue adding features as we cover more web technologies in class.</p>
-  <p>Your fun number is {{ num }}. Go play the lottery!</p>
+  <hr>
+  <section>
+    <h3>April 3, 2020</h3>
+    <p>Hi Class! Sorry for the delay in sending out more course material. My original plan was to have a lecture about using SendGrid for automating email, but unfrotunately I ran into some App Engine constraints. I will still post a lecture about automating emails, but it will be less hands-on than I hoped.</p>
+    <p>Instead, I have found a set of Tech Talks from around the internet that I would like you all to watch. They each focus on a newer, more industry-focused technology.</p>
+    <p>Please watch all of the following videos by Wednesday, April 8th. These can also be found at the <a href="/videos">videos</a> link.</p>
+    <ul>
+    {% for v in videos %}
+      <li><a href="{{ v.youtube_url }}">{{ v.title }}</a></li>
+    {% endfor %}
+    </ul>
+    <p>After you have watched these videos, please head to the <a href="https://courseweb.pitt.edu/webapps/discussionboard/do/forum?action=list_threads&forum_id=_333066_1&conf_id=_563530_1&course_id=_555629_1&nav=cp_discussion_board">Courseweb discussion page</a> and leave one post on the discussion for each video.</p>
+    <p>Today was also the original deadline for project feedback, but since I have not had time to send out the forms, that deadline will obviously be extended. I will only be sending out team feedback, but I will be posting the project videos tomorrow so that you can appreciate your classmates' wonderful projects.</p>
+  </section>
   <hr>
   <section>
     <h3>Remote Lectures - March 27, 2020</h3>
@@ -27,6 +39,7 @@
       email me these videos as attachments or upload them to YouTube and send me a link.
     </p>
   </section>
+  <hr>
   <section>
     <h3>Class 8 - March 5, 2020</h3>
     <p>Here is the schedule of upcoming classes:</p>
