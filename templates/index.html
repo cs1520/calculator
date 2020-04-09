@@ -8,8 +8,18 @@
   <h2>CS 1520: Programming Languages for Web Applications</h2>
   <p>Welcome to the class page!</p>
   <hr>
-    <h3>April 4, 2020</h3>
-    <p>Here are the videos that your classmates have 
+    <h3>April 9, 2020</h3>
+    <p>A few announcements! If you log into Courseweb today, you will see links to your classmates' Milestone 2 presentations. You do not have to submit reviews for these. If you have any concerns about your video or anyone else's, please email me.</p>
+    <p>Second, thank you all for your comments on the first set of talks. You will see some new videos and discussions for this week.</p>
+    <ul>
+    {% for v in second_videos %}
+      <li><a href="{{ v.youtube_url }}">{{ v.title }}</a></li>
+    {% endfor %}
+    </ul>
+    <p>Please leave a response on the Courseweb discussion <b>by next Wednesday, April 15th.</b></p>
+    <p>Also, while we're talking about deadlines: <b>April 22 is the due date for Milestone 3</b> which will be in the same format as Milestone 2.</p>
+    <p>I will be posting the Final Exam on <b>Monday, April 20</b> and you will have until midnight on <b>Friday, April 24.</b> I am still designing the Final exam, I will post a list of topics late next week. I do not expect the Final to be more difficult than the midterm, and I would encourage you to prioritize Milestone 3 over studying.</p>
+    <p>Finally, links to the OMET surveys should be available in your email. Please take some time to fill them out. The results are very useful to me and to the university.</p>
   <hr>
   <section>
     <h3>April 3, 2020</h3>
@@ -17,7 +27,7 @@
     <p>Instead, I have found a set of Tech Talks from around the internet that I would like you all to watch. They each focus on a newer, more industry-focused technology.</p>
     <p>Please watch all of the following videos by Wednesday, April 8th. These can also be found at the <a href="/videos">videos</a> link.</p>
     <ul>
-    {% for v in videos %}
+    {% for v in first_videos %}
       <li><a href="{{ v.youtube_url }}">{{ v.title }}</a></li>
     {% endfor %}
     </ul>
