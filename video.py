@@ -9,6 +9,6 @@ class VideoStore:
         if date_assigned:
             query.add_filter("date_assigned", ">", datetime.strptime(date_assigned, "%Y-%m-%d %H:%M:%S.%f"))
             query.add_filter("date_assigned", "<", datetime.strptime(date_assigned, "%Y-%m-%d %H:%M:%S.%f") + timedelta(days=1))
-        query.order["date_assigned"]
+        query.order = ["date_assigned"]
         videos = query.fetch()
         return list(videos)
