@@ -9,6 +9,7 @@ from flask import (
     session,
 )
 from random import randint
+from datetime import datetime
 import json
 
 from storage import (
@@ -44,8 +45,9 @@ def root():
     directory and fills in any variables.
     """
     user = session.get("user")
-    videos = video_store.fetch_videos()
-    return render_template("index.html", videos=videos, homepage=True, user=user)
+    first_videos = video_store.fetch_videos("2020-04-03 06:00:00.000")
+    second_videos = video_store.fetch_videos("2020-04-11 06:00:00.000")
+    return render_template("index.html", first_videos=first_videos, second_videos=second_videos, homepage=True, user=user)
 
 
 @app.route("/syllabus")
