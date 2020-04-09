@@ -46,7 +46,7 @@ def root():
     """
     user = session.get("user")
     first_videos = video_store.fetch_videos("2020-04-03 06:00:00.000")
-    second_videos = video_store.fetch_videos("2020-04-11 06:00:00.000")
+    second_videos = video_store.fetch_videos("2020-04-08 06:00:00.000")
     return render_template("index.html", first_videos=first_videos, second_videos=second_videos, homepage=True, user=user)
 
 
