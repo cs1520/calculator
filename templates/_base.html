@@ -14,29 +14,26 @@
 </head>
 
 <body>
-  <div class="navbar">
+  <nav class="navbar">
     <h1>Web Apps</h1>
     {% if homepage %}
     <ul>
-      <li><a href="/lecture">Lectures</a></li>
-      <li><a href="/syllabus">Syllabus</a></li>
-      <li><a href="/about">About this site</a></li>
-      <li><a href="/videos">Videos</a></li>
+      <li><a href="/quiz">Lectures</a></li>
     </ul>
     {% else %}
     <a href="/">Back to home</a>
     {% endif %}
-  </div>
+  </nav>
   {% if not auth and not user %}
-  <div class="login-link">
+  <nav class="login-link">
     <p><a href="/auth/login">Login</a></p>
-  </div>
+  </nav>
   {% endif %}
   {% if user %}
-  <div>
+  <nav>
     <p><a href="/profile">Hello, {{user}}</a></p>
     <p><a href="/auth/logout">Logout</a></p>
-  </div>
+  </nav>
   {% endif %}
   {% if error %}
   <span class="error">{{error}}</span>

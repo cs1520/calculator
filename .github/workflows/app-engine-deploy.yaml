@@ -6,7 +6,7 @@ on:
       - master
 
 env:
-  CLOUDSDK_CORE_PROJECT: 'jake1520'
+  CLOUDSDK_CORE_PROJECT: 'vernal-dispatch-303100'
 
 jobs:
   deploy-app-engine:

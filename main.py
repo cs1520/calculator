@@ -22,7 +22,6 @@ from storage import (
 import student
 from user import UserCredential, UserProfile, UserStore
 from quiz import Quiz, QuizStore
-from video import VideoStore
 
 app = Flask(__name__)
 app.secret_key = b"20072012f35b38f51c782e21b478395891bb6be23a61d70a"
@@ -45,59 +44,7 @@ def root():
     directory and fills in any variables.
     """
     user = session.get("user")
-    first_videos = video_store.fetch_videos("2020-04-03 06:00:00.000")
-    second_videos = video_store.fetch_videos("2020-04-08 06:00:00.000")
-    return render_template("index.html", first_videos=first_videos, second_videos=second_videos, homepage=True, user=user)
-
-
-@app.route("/syllabus")
-def syllabus():
-    """Generate a page that contains the course syllabus
-
-    Just like the root() function, but it's annotated with a different route.
-    """
-    return render_template("syllabus.html")
-
-
-@app.route("/lecture")
-def handle_lecture():
-    """Generate a page with a list of lectures
-
-    In this iteration, the data is read from Datastore. It generates links our to Object Storage.
-    """
-    lectures = list_slides(datastore_client)
-    return render_template("lectures.html", lectures=lectures)
-
-
-@app.route("/about")
-def handle_about():
-    """Generate a page with a description of how this website works.
-
-    Includes a link to this website's GitHub page.
-    """
-    return render_template("about.html")
-
-
-@app.route("/videos")
-def handle_videos():
-    videos = video_store.fetch_videos()
-    return render_template("videos.html", videos=videos)
-
-
-@app.route("/survey", methods=["GET"])
-def show_survey():
-    """Generate a page where students can give me feeback.
-
-    Hopefully they are nice!
-    """
-    return render_template("survey.html")
-
-
-@app.route("/survey", methods=["POST"])
-def handle_survey():
-    """Process the form fields from the survey"""
-    store_survey(datastore_client, request.form)
-    return render_template("survey_thanks.html")
+    return render_template("index.html", user=user, homepage=True)
 
 
 @app.route("/quiz/<id>", methods=["GET"])
