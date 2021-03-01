@@ -1,13 +1,12 @@
-name: Deploy to App Engine
-
 on:
   push:
     branches:
       - main
 
+name: Deploy to App Engine
+
 jobs:
-  deploy-app-engine:
-    name: Deploy
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
