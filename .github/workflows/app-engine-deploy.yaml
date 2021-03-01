@@ -5,12 +5,9 @@ on:
     branches:
       - main
 
-env:
-  CLOUDSDK_CORE_PROJECT: 'vernal-dispatch-303100'
-
 jobs:
   deploy-app-engine:
-    name: Deploy App Engine
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -20,7 +17,7 @@ jobs:
         id: deploy
         uses: google-github-actions/deploy-appengine@v0.2.0
         with:
-          deliverables: example-app/app.yaml
+          deliverables: app.yaml
           project_id: ${{ secrets.GCP_PROJECT }}
           credentials: ${{ secrets.GCP_SA_KEY }}
 
