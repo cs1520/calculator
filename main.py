@@ -11,8 +11,8 @@ from flask import (
 from google.cloud import datastore
 import json
 
-from .auth import blueprint as auth_blueprint
-from .calculate import calculate as c
+from calculator.auth import blueprint as auth_blueprint
+from calculator.calculate import calculate as c
 
 app = Flask(__name__)
 app.secret_key = b"20072012f35b38f51c782e21b478395891bb6be23a61d70a"

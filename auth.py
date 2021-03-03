@@ -1,7 +1,7 @@
 from flask import Blueprint, request, session, redirect, render_template
 from google.cloud import datastore
 
-from .user import UserStore, generate_creds, hash_password
+from calculator.user import UserStore, generate_creds, hash_password
 
 blueprint = Blueprint('auth', __name__)
 
@@ -20,8 +20,6 @@ def show_signup_form():
 def handle_signup():
     username = request.args.get("username") or request.form.get("username")
     password = request.args.get("password") or request.form.get("password")
-    print("handler: " + username)
-    print("handler: " + password)
     if username in userstore.list_existing_users():
         return render_template(
             "signup.html", auth=True, error="A user with that username already exists"
