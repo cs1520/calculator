@@ -10,6 +10,11 @@
     </p>
 
     <p>
+      <label>Email Address</label>
+      <input type="email" id="email" name="email" required>
+    </p>
+
+    <p>
       <label>Password</label>
       <input type="password" id="password" name="password" required>
     </p>
@@ -44,12 +49,16 @@
         }
       });
   }
-  username.onchange = validateUniqueUsername;
+  // Commenting out since I don't support the server-side features right now
+  // username.onchange = validateUniqueUsername;
   
   function validatePassword()
   {
       if(password.value != confirm_password.value)
       {
+          console.log(password.value);
+          console.log(confirm_password.value);
+          console.log(password.value != confirm_password.value);
           confirm_password.setCustomValidity("Passwords Don't Match");
           confirm_password.reportValidity();
       } 
@@ -59,7 +68,11 @@
           password.reportValidity();
       } else
       {
+          // empty string indicates that there is no validity error
           password.setCustomValidity("");
+          password.reportValidity();
+          confirm_password.setCustomValidity("");
+          confirm_password.reportValidity();
       }
   }
   password.onchange = validatePassword;

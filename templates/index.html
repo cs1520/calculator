@@ -1,12 +1,15 @@
 {% extends "_base.html" %}
 
-{% block title %}CS 1520: Programming Languages for Web Applications{% endblock %}
+{% block title %}Calculator{% endblock %}
 
 {% block content %}
-<!-- The body tag describes everything in the frame of the web browser -->
-<div class="center">
-  <h2>CS 1520: Programming Languages for Web Applications</h2>
-  <p>Welcome to the class page!</p>
-</div>
-<!-- This div isn't technically necessary, but in the future I may add some styling around this div -->
+<main class="centered">
+  <form method="POST" action="/calculate">
+    <input type="text" name="formula" placeholder="1 + 2">
+    <input type="submit" name="submit">
+  </form>
+</main>
+<aside>
+  <p>Submit a formula like <code>1 + 2</code> or <code>arcsin(0.5)</code> to the calculator and see what you get!</p>
+</aside>
 {% endblock %}

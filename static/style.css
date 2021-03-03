@@ -1,3 +1,17 @@
+body {
+  background-color: rgb(255, 255, 232);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+form label {
+  text-align: right;
+  position: relative;
+}
+
 .centered {
   width: 500px;
   margin: auto;
