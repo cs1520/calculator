@@ -29,7 +29,7 @@ def root():
     directory and fills in any variables.
     """
     user = get_user()
-    return render_template("index.html", homepage=True)
+    return render_template("index.html", homepage=True, user=user)
 
 
 @app.route("/calculate", methods=["POST"])
