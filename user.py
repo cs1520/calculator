@@ -15,7 +15,6 @@ class UserCredential:
 
 
 def generate_creds(username, password):
-    print(password)
     """This is a helper method for creating a new credential record
     """
     salt = hashlib.sha256(os.urandom(60)).hexdigest().encode("utf-8")
@@ -24,8 +23,6 @@ def generate_creds(username, password):
 
 
 def hash_password(password, salt):
-    print(password)
-    print(salt)
     """This will give us a hashed password that will be extremlely difficult to 
     reverse.  Creating this as a separate function allows us to perform this
     operation consistently every time we use it."""
