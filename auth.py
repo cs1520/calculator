@@ -1,7 +1,7 @@
 from flask import Blueprint, request, session, redirect, render_template
 from google.cloud import datastore
 
-from calculator.user import UserStore, generate_creds, hash_password
+from user import UserStore, generate_creds, hash_password
 
 blueprint = Blueprint('auth', __name__)
 
